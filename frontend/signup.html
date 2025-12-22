@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Signup</title>
+</head>
+<body>
+
+<div class="card">
+  <h2>Create Account</h2>
+
+  <input id="username" placeholder="Username">
+  <input id="password1" type="password" placeholder="Password">
+  <input id="password2" type="password" placeholder="Confirm Password">
+
+  <input id="firstname" placeholder="First Name">
+  <input id="lastname" placeholder="Last Name">
+  <input id="age" placeholder="Age">
+  <input id="email" placeholder="Email">
+  <input id="phone" placeholder="Phone">
+  <input id="address" placeholder="Address">
+  
+
+  <div class="btn-group">
+    <button class="btn-primary" onclick="signup()">Signup</button>
+    <button class="btn-secondary" onclick="goLogin()">Back</button>
+  </div>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+async function signup() {
+  if (password1.value !== password2.value) {
+    msg.innerText = "Passwords do not match";
+    return;
+  }
+
+  let data = new FormData();
+  data.append("username", username.value);
+  data.append("password", password1.value);
+  data.append("firstname", firstname.value);
+  data.append("lastname", lastname.value);
+  data.append("age", age.value);
+  data.append("email", email.value);
+  data.append("phone", phone.value);
+  data.append("address", address.value);
+  
+
+  let res = await fetch("http://localhost:8000/signup", {
+    method: "POST",
+    body: data
+  });
+
+  if (res.ok) {
+    alert("Signup successful. Please login.");
+    window.location = "login.html";
+  } else {
+    msg.innerText = "Signup failed";
+  }
+}
+
+function goLogin() {
+  window.location = "login.html";
+}
+</script>
+
+</body>
+</html>

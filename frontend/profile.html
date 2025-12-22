@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card profile-card">
+
+  <div class="profile-header">
+    <img id="photo" class="profile-pic">
+    <h2 id="fullName"></h2>
+  </div>
+
+  <table class="profile-table">
+    <tr>
+      <td class="label">Email</td>
+      <td id="email"></td>
+    </tr>
+    <tr>
+      <td class="label">Phone</td>
+      <td id="phone"></td>
+    </tr>
+    <tr>
+      <td class="label">Age</td>
+      <td id="age"></td>
+    </tr>
+    <tr>
+      <td class="label">Address</td>
+      <td id="address"></td>
+    </tr>
+  </table>
+
+</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+
+document.getElementById("photo").src = user.photo || "https://via.placeholder.com/120";
+document.getElementById("fullName").innerText =
+  user.firstname + " " + user.lastname;
+document.getElementById("email").innerText = user.email;
+document.getElementById("phone").innerText = user.phone;
+document.getElementById("age").innerText = user.age;
+document.getElementById("address").innerText = user.address;
+</script>
+
+</body>
+</html>

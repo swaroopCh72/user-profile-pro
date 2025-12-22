@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Login</title>
+</head>
+<body>
+
+<div class="card">
+  <h2>Login</h2>
+
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+
+  <div class="btn-group">
+    <button class="btn-primary" onclick="login()">Login</button>
+    <button class="btn-secondary" onclick="goSignup()">Sign Up</button>
+  </div>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+async function login() {
+  let data = new FormData();
+  data.append("username", username.value);
+  data.append("password", password.value);
+
+  let res = await fetch("http://localhost:8000/login", {
+    method: "POST",
+    body: data
+  });
+
+  if (res.ok) {
+    localStorage.setItem("user", JSON.stringify(await res.json()));
+    window.location = "profile.html";
+  } else {
+    msg.innerText = "Invalid username or password";
+  }
+}
+
+function goSignup() {
+  window.location = "signup.html";
+}
+</script>
+
+</body>
+</html>
