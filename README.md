@@ -1,11 +1,13 @@
 
 ---
 
-# 🧑‍💻 Simple Login & Profile Web Application
+# 🧑‍💻 Login & Profile Web Application (Dockerized)
 
 ## 📌 Project Overview
 
-This project is a **simple login and signup web application** built to understand **frontend–backend communication**, **database integration**, and **basic authentication flow** using modern web technologies.
+This project is a **simple login and profile web application** built to understand **frontend–backend communication**, **database integration**, and **basic authentication flow**, using a **containerized, industry-style setup**.
+
+The application is fully **Dockerized using Docker Compose**, enabling consistent execution across environments without manual local configuration.
 
 Users can:
 
@@ -13,8 +15,7 @@ Users can:
 * Log in using username and password
 * View their profile details after successful login
 
-> ⚠️ This project does **not** use JWT authentication or logout functionality.
-> It is intentionally kept simple for learning purposes.
+> ⚠️ This project intentionally avoids JWT authentication and logout functionality to keep the focus on **core backend logic and infrastructure fundamentals**.
 
 ---
 
@@ -25,6 +26,7 @@ Users can:
 * HTML
 * CSS
 * Vanilla JavaScript
+* Nginx (for serving static files)
 
 ### Backend
 
@@ -33,26 +35,35 @@ Users can:
 
 ### Database
 
-* MongoDB (local)
+* MongoDB
+
+### DevOps / Infrastructure
+
+* Docker
+* Docker Compose
 
 ---
 
 ## 📁 Project Structure
 
 ```
-login_app/
+user-profile-pro/
 │
 ├── backend/
-│   ├── main.py          # FastAPI routes
-│   ├── database.py      # MongoDB connection
-│   └── requirements.txt
+│   ├── main.py              # FastAPI routes
+│   ├── database.py          # MongoDB connection logic
+│   ├── requirements.txt
+│   └── Dockerfile
 │
 ├── frontend/
-│   ├── login.html
+│   ├── index.html           # Login page (entry point)
 │   ├── signup.html
 │   ├── profile.html
-│   └── style.css
+│   ├── style.css
+│   └── Dockerfile
 │
+├── docker-compose.yml
+├── .env.example
 └── README.md
 ```
 
@@ -61,15 +72,15 @@ login_app/
 ## ⚙️ Application Flow
 
 1. User opens the **Login page**
-2. If the user does not have an account, they click **Sign Up**
+2. If the user does not have an account, they navigate to **Sign Up**
 3. User registers by providing:
 
    * Username
    * Password
    * Personal details (name, age, email, phone, address)
-4. User logs in with username and password
+4. User logs in using username and password
 5. On successful login, the **Profile page** is displayed
-6. Profile information is fetched from MongoDB and shown in a readable table layout
+6. Profile information is fetched from MongoDB and rendered in a readable layout
 
 ---
 
@@ -98,77 +109,88 @@ Example document:
 
 ---
 
-## 🚀 How to Run the Project (Development)
+## 🚀 Running the Project (Docker – Recommended)
 
-### 1️⃣ Start MongoDB
+### 1️⃣ Prerequisites
 
-Make sure MongoDB is running locally:
+* Docker
+* Docker Compose
 
-```bash
-sudo systemctl start mongod
-```
-
-Verify:
+Verify installation:
 
 ```bash
-systemctl status mongod
+docker --version
+docker compose version
 ```
 
 ---
 
-### 2️⃣ Backend Setup
+### 2️⃣ Environment Configuration
 
-```bash
-cd login_app
-python3 -m venv venv
-source venv/bin/activate
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
+Create a `.env` file in the project root:
+
+```env
+MONGO_USERNAME=admin
+MONGO_PASSWORD=secret
 ```
 
-Backend will run at:
-
-```
-http://127.0.0.1:8000
-```
-
-Swagger API Docs:
-
-```
-http://127.0.0.1:8000/docs
-```
+> ⚠️ Do **NOT** commit `.env` to GitHub
+> Use `.env.example` as a reference.
 
 ---
 
-### 3️⃣ Frontend Setup
+### 3️⃣ Start the Application
 
 ```bash
-cd login_app/frontend
-python3 -m http.server 5500
+docker compose down -v
+docker compose up --build
 ```
 
-Open in browser:
+This command:
 
-```
-http://localhost:5500/login.html
-```
+* Builds backend and frontend images
+* Starts MongoDB with authentication
+* Runs all services in a shared Docker network
 
-> ⚠️ Do NOT open HTML files using `file://`
-> Always use an HTTP server.
+---
+
+### 4️⃣ Access the Services
+
+| Service       | URL                                                      |
+| ------------- | -------------------------------------------------------- |
+| Frontend      | [http://localhost:3000](http://localhost:3000)           |
+| Backend API   | [http://localhost:8000](http://localhost:8000)           |
+| Swagger Docs  | [http://localhost:8000/docs](http://localhost:8000/docs) |
+| Mongo Express | [http://localhost:8081](http://localhost:8081)           |
+
+**Mongo Express Login**
+
+* Username: `admin`
+* Password: `secret`
+
+---
+
+## 🧠 Key Concepts Demonstrated
+
+* Docker Compose multi-service orchestration
+* Environment-based configuration using `.env`
+* MongoDB authentication and persistent volumes
+* Container-to-container communication via service names
+* Backend startup failure debugging
+* Clean separation of frontend, backend, and database layers
 
 ---
 
 ## 🎨 UI Features
 
 * Clean login and signup forms
-* Signup and Login buttons placed side-by-side
-* Profile page with:
+* Simple navigation between login and signup
+* Profile page displaying:
 
   * Avatar
   * Full name
-  * Labeled table layout for user details
-* Responsive and readable design
+  * User details in table format
+* Responsive and readable layout
 
 ---
 
@@ -178,30 +200,44 @@ http://localhost:5500/login.html
 * No logout functionality
 * Passwords stored in plain text
 * No session management
-* No role-based access
+* No role-based access control
 
-These features are intentionally excluded to keep the project beginner-friendly.
+These limitations are intentional to keep the project focused on **learning fundamentals and infrastructure setup**.
 
 ---
 
 ## 🔮 Future Enhancements
 
 * JWT-based authentication
-* Logout functionality
-* Password hashing
+* Password hashing (bcrypt)
+* Logout and session handling
 * Profile image upload
-* Edit profile option
-* Dockerized deployment
+* Edit profile functionality
+* CI/CD pipeline (GitHub Actions)
+* Deployment on AWS EC2 / Kubernetes
 
 ---
 
 ## 🎓 Learning Outcomes
 
-* Frontend–backend integration
-* Handling HTML form data with FastAPI
-* MongoDB CRUD operations
-* Understanding authentication flow
-* Debugging real-world issues (CORS, blocked requests, data mismatch)
+* Frontend–backend integration using REST APIs
+* MongoDB CRUD operations with authentication
+* Dockerizing multi-service applications
+* Debugging container networking and environment issues
+* Applying industry-style Git branching and workflows
+
+---
+
+### ✅ Recommended Additions
+
+Create this file for clarity:
+
+**`.env.example`**
+
+```env
+MONGO_USERNAME=your_username
+MONGO_PASSWORD=your_password
+```
 
 ---
 
@@ -210,5 +246,3 @@ These features are intentionally excluded to keep the project beginner-friendly.
 This project is created for **learning and educational purposes**.
 
 ---
-
-
